@@ -1,19 +1,14 @@
 FROM php:5.6-alpine
 
 # Get repository and install wget and vim
-RUN apt-get update && apt-get install --no-install-recommends -y \
+RUN apk add --no-cache \
         wget \
         vim \
         git \
         unzip
 
-# Add PostgreSQL repository
-RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main" > /etc/apt/sources.list.d/pgdg.list
-RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | \
-      apt-key add -
-
 # Install Oracle Instantclient
-RUN mkdir /opt/oracle \
+RUN mkdir -p /opt/oracle \
     && cd /opt/oracle \
     && wget https://s3.amazonaws.com/merofile/instantclient-basic-linux.x64-12.1.0.2.0.zip \
     && wget https://s3.amazonaws.com/merofile/instantclient-sdk-linux.x64-12.1.0.2.0.zip \
@@ -24,24 +19,28 @@ RUN mkdir /opt/oracle \
     && ln -s /opt/oracle/instantclient_12_1/libocci.so.12.1 /opt/oracle/instantclient_12_1/libocci.so \
     && rm -rf /opt/oracle/*.zip
 
-
 # Install PHP extensions deps
-RUN apt-get update \
-    && apt-get install --no-install-recommends -y \
-        postgresql-server-dev-9.5 \
+RUN apk add --no-cache \
+        postgresql-dev \
         libfreetype6-dev \
-        libjpeg62-turbo-dev \
+        freetype-dev \
+        libjpeg-turbo-dev \
         libmcrypt-dev \
-        libpng12-dev \
-        zlib1g-dev \
-        libicu-dev \
+        libpng-dev \
+        zlib-dev \
+        icu-dev \
         g++ \
         unixodbc-dev \
         libxml2-dev \
         libaio-dev \
-        libgearman-dev \
         libmemcached-dev \
         freetds-dev
+
+# Add testing repository to Gearman library
+RUN echo @testing http://nl.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories \
+    && apk update \
+    && apk add --no-cache \
+        gearman-dev@testing
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- \
@@ -56,7 +55,7 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
     && pecl install gearman \
     && pecl install memcached \
     && docker-php-ext-configure pdo_oci --with-pdo-oci=instantclient,/opt/oracle/instantclient_12_1,12.1 \
-    && docker-php-ext-configure pdo_dblib --with-libdir=/lib/x86_64-linux-gnu \
+    && docker-php-ext-configure pdo_dblib \
     && docker-php-ext-install \
             iconv \
             mbstring \
@@ -85,7 +84,3 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
 # Install PHPUnit 5.5
 RUN wget https://phar.phpunit.de/phpunit.phar -O /usr/local/bin/phpunit \
     && chmod +x /usr/local/bin/phpunit
-
-# Clean repository
-RUN apt-get clean \
-    && rm -rf /var/lib/apt/lists/*

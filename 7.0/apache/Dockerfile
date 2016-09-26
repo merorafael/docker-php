@@ -13,7 +13,7 @@ RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | \
       apt-key add -
 
 # Install Oracle Instantclient
-RUN mkdir /opt/oracle \
+RUN mkdir -p /opt/oracle \
     && cd /opt/oracle \
     && wget https://s3.amazonaws.com/merofile/instantclient-basic-linux.x64-12.1.0.2.0.zip \
     && wget https://s3.amazonaws.com/merofile/instantclient-sdk-linux.x64-12.1.0.2.0.zip \
@@ -23,7 +23,6 @@ RUN mkdir /opt/oracle \
     && ln -s /opt/oracle/instantclient_12_1/libclntshcore.so.12.1 /opt/oracle/instantclient_12_1/libclntshcore.so \
     && ln -s /opt/oracle/instantclient_12_1/libocci.so.12.1 /opt/oracle/instantclient_12_1/libocci.so \
     && rm -rf /opt/oracle/*.zip
-
 
 # Install PHP extensions deps
 RUN apt-get update \
