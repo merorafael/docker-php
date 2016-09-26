@@ -22,7 +22,6 @@ RUN mkdir -p /opt/oracle \
 # Install PHP extensions deps
 RUN apk add --no-cache \
         postgresql-dev \
-        libfreetype6-dev \
         freetype-dev \
         libjpeg-turbo-dev \
         libmcrypt-dev \
