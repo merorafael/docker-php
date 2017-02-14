@@ -57,7 +57,6 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
     && docker-php-ext-configure pdo_dblib --with-libdir=/lib/x86_64-linux-gnu \
     && pecl install apcu-4.0.10 \
     && pecl install redis-2.2.8 \
-    && pecl install gearman \
     && pecl install memcached-2.2.0 \
     && docker-php-ext-install \
             iconv \
@@ -81,7 +80,6 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
             apcu \
             memcached \
             redis \
-            gearman \
             opcache
 
 # Install PHPUnit
