@@ -13,7 +13,7 @@ RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | \
       apt-key add -
 
 # Install Oracle Instantclient
-RUN mkdir -p /opt/oracle \
+RUN mkdir /opt/oracle \
     && cd /opt/oracle \
     && wget https://s3.amazonaws.com/merofile/instantclient-basic-linux.x64-12.1.0.2.0.zip \
     && wget https://s3.amazonaws.com/merofile/instantclient-sdk-linux.x64-12.1.0.2.0.zip \
@@ -39,7 +39,9 @@ RUN apt-get update \
         libxml2-dev \
         libaio-dev \
         libmemcached-dev \
-        freetds-dev
+        freetds-dev \
+	libssl-dev \
+	openssl
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- \
@@ -49,12 +51,12 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
 # Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && echo 'instantclient,/opt/oracle/instantclient_12_1/' | pecl install oci8 \
-    && pecl install redis \
-    && git clone https://github.com/php-memcached-dev/php-memcached /usr/src/php/ext/memcached \
-    && cd /usr/src/php/ext/memcached && git checkout -b php7 origin/php7 \
-    && docker-php-ext-configure memcached \
     && docker-php-ext-configure pdo_oci --with-pdo-oci=instantclient,/opt/oracle/instantclient_12_1,12.1 \
     && docker-php-ext-configure pdo_dblib --with-libdir=/lib/x86_64-linux-gnu \
+    && pecl install sqlsrv-4.1.6.1 \
+    && pecl install pdo_sqlsrv-4.1.6.1 \
+    && pecl install redis \
+    && pecl install memcached \
     && docker-php-ext-install \
             iconv \
             mbstring \
@@ -70,12 +72,14 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
             soap \
             sockets \
             zip \
-            memcached \
             pcntl \
             ftp \
     && docker-php-ext-enable \
             oci8 \
+            sqlsrv \
+            pdo_sqlsrv \
             redis \
+            memcached \
             opcache
 
 # Install APCu and APC backward compatibility
@@ -84,7 +88,7 @@ RUN pecl install apcu \
     && docker-php-ext-enable apcu --ini-name 10-docker-php-ext-apcu.ini \
     && docker-php-ext-enable apc --ini-name 20-docker-php-ext-apc.ini
 
-# Install PHPUnit 5.5
+# Install PHPUnit
 RUN wget https://phar.phpunit.de/phpunit.phar -O /usr/local/bin/phpunit \
     && chmod +x /usr/local/bin/phpunit
 
