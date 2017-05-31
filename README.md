@@ -39,11 +39,9 @@ Extensions enabled
 | zip         |    x    |    x    |    x    |
 | pgsql       |    x    |    x    |    x    |
 | mysqli      |    x    |    x    |    x    |
-| oci8        |    x    |    x    |    x    |
 | sqlsrv¹     |         |    x    |    x    |
 | pdo_pgsql   |    x    |    x    |    x    |
 | pdo_mysql   |    x    |    x    |    x    |
-| pdo_oci     |    x    |    x    |    x    |
 | pdo_sqlsrv¹ |         |    x    |    x    |
 | pdo_dblib   |    x    |    x    |    x    |
 | pdo_sqlite  |    x    |    x    |    x    |
@@ -52,6 +50,7 @@ Extensions enabled
 | apcu        |    x    |    x    |    x    |
 | opcache     |    x    |    x    |    x    |
 | ftp         |    x    |    x    |    x    |
+| xdebug      |    x    |    x    |    x    |
 
 ¹ Microsoft only provides support SQL Server for PHP 7.0 or above.
 
@@ -64,3 +63,79 @@ Extras
 - vim
 - git
 - unzip
+
+About Oracle extensions
+-----------------------
+
+In this version, the extensions `pdo_oci` and `oci` have been remove.
+This change happened because these extensions depend on `Oracle Instant Client`. 
+
+To download this package, the user will need a login and password on the Oracle portal.
+ 
+Including Oracle extensions
+---------------------------
+
+Create a `Dockerfile` extending some `merorafael/php` image.
+**Example:**
+```
+FROM merorafael/php:7.1-fpm
+```
+
+Use the commands below to install `Oracle Instant Client` on the container.
+
+**Attention!** You need change versions referecences and replace `<ORALCE_INSTANT_CLIENT_URL>`
+with `Oracle Instant Client` download URL.
+
+```
+# Install Oracle Instantclient
+RUN mkdir /opt/oracle \
+    && cd /opt/oracle \
+    && wget <ORACLE_INSTANT_CLIENT_URL> \
+    && wget <ORACLE_INSTANT_CLIENT_URL> \
+    && unzip /opt/oracle/instantclient-basic-linux.x64-12.1.0.2.0.zip -d /opt/oracle \
+    && unzip /opt/oracle/instantclient-sdk-linux.x64-12.1.0.2.0.zip -d /opt/oracle \
+    && ln -s /opt/oracle/instantclient_12_1/libclntsh.so.12.1 /opt/oracle/instantclient_12_1/libclntsh.so \
+    && ln -s /opt/oracle/instantclient_12_1/libclntshcore.so.12.1 /opt/oracle/instantclient_12_1/libclntshcore.so \
+    && ln -s /opt/oracle/instantclient_12_1/libocci.so.12.1 /opt/oracle/instantclient_12_1/libocci.so \
+    && rm -rf /opt/oracle/*.zip
+```
+
+Install `OCI8` and `PDO_OCI` using the commands bellow.
+
+```
+# Install Oracle extensions
+RUN docker-php-ext-configure pdo_oci --with-pdo-oci=instantclient,/opt/oracle/instantclient_12_1,12.1 \
+       && echo 'instantclient,/opt/oracle/instantclient_12_1/' | pecl install oci8 \
+       && docker-php-ext-install \
+               pdo_oci \
+       && docker-php-ext-enable \
+               oci8
+```
+
+Now just build the image and use it in your containers.
+
+#### Complete `Dockerfile` example
+
+```
+FROM merorafael/php:7.1-fpm
+
+# Install Oracle Instantclient
+RUN mkdir /opt/oracle \
+    && cd /opt/oracle \
+    && wget <ORACLE_INSTANT_CLIENT_URL> \
+    && wget <ORACLE_INSTANT_CLIENT_URL> \
+    && unzip /opt/oracle/instantclient-basic-linux.x64-12.1.0.2.0.zip -d /opt/oracle \
+    && unzip /opt/oracle/instantclient-sdk-linux.x64-12.1.0.2.0.zip -d /opt/oracle \
+    && ln -s /opt/oracle/instantclient_12_1/libclntsh.so.12.1 /opt/oracle/instantclient_12_1/libclntsh.so \
+    && ln -s /opt/oracle/instantclient_12_1/libclntshcore.so.12.1 /opt/oracle/instantclient_12_1/libclntshcore.so \
+    && ln -s /opt/oracle/instantclient_12_1/libocci.so.12.1 /opt/oracle/instantclient_12_1/libocci.so \
+    && rm -rf /opt/oracle/*.zip
+    
+# Install Oracle extensions
+RUN docker-php-ext-configure pdo_oci --with-pdo-oci=instantclient,/opt/oracle/instantclient_12_1,12.1 \
+       && echo 'instantclient,/opt/oracle/instantclient_12_1/' | pecl install oci8 \
+       && docker-php-ext-install \
+               pdo_oci \
+       && docker-php-ext-enable \
+               oci8
+```
