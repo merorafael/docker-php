@@ -18,39 +18,43 @@ Supported tags
 - [`5.6-fpm`, `5-fpm`](5.6/fpm/Dockerfile)
 - [`5.6-apache`, `5-apache`](5.6/apache/Dockerfile)
 - [`5.6-zts`, `5-zts`](5.6/zts/Dockerfile)
+- [`5.4-cli`, `5.4`](5.4/Dockerfile)
+- [`5.4-fpm`](5.4/fpm/Dockerfile)
+- [`5.4-apache`](5.4/apache/Dockerfile)
+- [`5.4-zts`](5.4/zts/Dockerfile)
 
 Extensions enabled
 ------------------
 
-| Extension   | PHP 5.6 | PHP 7.0 | PHP 7.1 |
-| ----------- | ------- | ------- | ------- |
-| mcrypt      |    x    |    x    |    x    |
-| iconv       |    x    |    x    |    x    |
-| intl        |    x    |    x    |    x    |
-| mbstring    |    x    |    x    |    x    |
-| gd          |    x    |    x    |    x    |
-| curl        |    x    |    x    |    x    |
-| dom         |    x    |    x    |    x    |
-| soap        |    x    |    x    |    x    |
-| simplexml   |    x    |    x    |    x    |
-| xmlreader   |    x    |    x    |    x    |
-| xmlwriter   |    x    |    x    |    x    |
-| sockets     |    x    |    x    |    x    |
-| zip         |    x    |    x    |    x    |
-| pgsql       |    x    |    x    |    x    |
-| mysqli      |    x    |    x    |    x    |
-| sqlsrv¹     |         |    x    |    x    |
-| pdo_pgsql   |    x    |    x    |    x    |
-| pdo_mysql   |    x    |    x    |    x    |
-| pdo_sqlsrv¹ |         |    x    |    x    |
-| pdo_dblib   |    x    |    x    |    x    |
-| pdo_sqlite  |    x    |    x    |    x    |
-| memcached   |    x    |    x    |    x    |
-| redis       |    x    |    x    |    x    |
-| apcu        |    x    |    x    |    x    |
-| opcache     |    x    |    x    |    x    |
-| ftp         |    x    |    x    |    x    |
-| xdebug      |    x    |    x    |    x    |
+| Extension   | PHP 5.4 | PHP 5.6 | PHP 7.0 | PHP 7.1 |
+| ----------- | ------- | ------- | ------- | ------- |
+| mcrypt      |    x    |    x    |    x    |    x    |
+| iconv       |    x    |    x    |    x    |    x    |
+| intl        |    x    |    x    |    x    |    x    |
+| mbstring    |    x    |    x    |    x    |    x    |
+| gd          |    x    |    x    |    x    |    x    |
+| curl        |    x    |    x    |    x    |    x    |
+| dom         |    x    |    x    |    x    |    x    |
+| soap        |    x    |    x    |    x    |    x    |
+| simplexml   |    x    |    x    |    x    |    x    |
+| xmlreader   |    x    |    x    |    x    |    x    |
+| xmlwriter   |    x    |    x    |    x    |    x    |
+| sockets     |    x    |    x    |    x    |    x    |
+| zip         |    x    |    x    |    x    |    x    |
+| pgsql       |    x    |    x    |    x    |    x    |
+| mysqli      |    x    |    x    |    x    |    x    |
+| sqlsrv¹     |         |         |    x    |    x    |
+| pdo_pgsql   |    x    |    x    |    x    |    x    |
+| pdo_mysql   |    x    |    x    |    x    |    x    |
+| pdo_sqlsrv¹ |         |         |    x    |    x    |
+| pdo_dblib   |    x    |    x    |    x    |    x    |
+| pdo_sqlite  |    x    |    x    |    x    |    x    |
+| memcached   |    x    |    x    |    x    |    x    |
+| redis       |    x    |    x    |    x    |    x    |
+| apcu        |    x    |    x    |    x    |    x    |
+| opcache     |    x    |    x    |    x    |    x    |
+| ftp         |    x    |    x    |    x    |    x    |
+| xdebug      |    x    |    x    |    x    |    x    |
 
 ¹ Microsoft only provides support SQL Server for PHP 7.0 or above.
 
