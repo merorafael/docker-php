@@ -87,7 +87,7 @@ FROM merorafael/php:7.1-fpm
 
 Use the commands below to install `Oracle Instant Client` on the container.
 
-**Attention!** You need change versions referecences and replace `<ORALCE_INSTANT_CLIENT_URL>`
+**Attention!** You need change versions referecences and replace `<ORACLE_INSTANT_CLIENT_URL>`
 with `Oracle Instant Client` download URL.
 
 ```
